@@ -16,19 +16,22 @@
         <div x-data="load()">
             <!-- First we get the exchange rate -->
             <label for="rate">Tasa Bs.</label>
-            <input id="rate" x-model="rate" placeholder="Tasa" type="number" step="0.01" required>
+            <input id="rate" x-model="rate" placeholder="0.00" type="number" step="0.01" required>
             <hr>
             <!-- Get the item description -->
             <label for="desc">Articulo</label>
-            <input id="desc" x-model="desc" placeholder="Descripcion del articulo" type="text">
+            <input id="desc" x-model="desc" placeholder="Descripcion" type="text">
             <!-- Precio-->
             <label for="price">Precio</label>
             <input id="price" x-model="price" placeholder="0.00" type="number" step="0.01">
             <!-- Radio input -->
-            <input id="bolivar" type="radio" value="bolivar" x-model="moneda" checked>
-            <label for="bolivar">Bolivares</label>
-            <input id="dolar" type="radio" value="dolar" x-model="moneda">
-            <label for="dolar">Dolares</label>
+
+            <template x-for="(currency, index) in currencies" :key="index">
+                <div>
+                    <input x-model="moneda" type="radio" :value="currency" :id="index">
+                    <label :for="index" x-text="currency"></label>
+                </div>
+            </template>
             <br><br>
             <button x-on:click="addItem">Agregar</button>
             <hr>
@@ -54,13 +57,14 @@
     <script>
         function load() {
             return {
-                rate: 0,
+                rate: "",
                 items: [],
                 desc: "",
-                price: 0,
-                moneda: "bolivar",
+                price: "",
+                moneda: "Bolivar",
+                currencies: ["Bolivar", "Dolar"],
                 addItem() {
-                    if (this.moneda.value == "dolar") {
+                    if (this.moneda == "Dolar") {
                         tmp_usd = price.value
                         tmp_ves = tmp_usd * rate.value
                     } else {
@@ -73,7 +77,7 @@
                         usd_price: parseFloat(tmp_usd).toFixed(2)
                     })
                     this.desc = ""
-                    this.price = 0
+                    this.price = ""
                 },
                 deleteItem(index) {
                     this.items = this.items.filter((items, itemIndex) => {
