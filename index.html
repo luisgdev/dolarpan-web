@@ -13,79 +13,99 @@
 <body>
     <main class="container">
         <h3>Calcular precios</h3>
+        <p>Consulta la tasa del día 👉 <a href="https://t.me/dolarpan_bot">Dolarpan Bot</a>.</p>
         <div x-data="load()">
-            <!-- First we get the exchange rate -->
-            <label for="rate">Tasa Bs.</label>
-            <input id="rate" x-model="rate" placeholder="0.00" type="number" step="0.01" required>
+            <!-- Tasa de cambio -->
+            <label for="tasa">Tasa Bs.</label>
+            <input id="tasa" x-model="tasa" placeholder="0.00" x-text="getRate()" type="number" step="0.01" required>
             <hr>
-            <!-- Get the item description -->
-            <label for="desc">Articulo</label>
-            <input id="desc" x-model="desc" placeholder="Descripcion" type="text">
-            <!-- Precio-->
-            <label for="price">Precio</label>
-            <input id="price" x-model="price" placeholder="0.00" type="number" step="0.01">
-            <!-- Radio input -->
-
-            <template x-for="(currency, index) in currencies" :key="index">
+            <!-- Descripcion del producto -->
+            <label for="desc">Artículo</label>
+            <input id="desc" x-model="desc" placeholder="Descripcion del producto" type="text">
+            <!-- Precio del producto -->
+            <label for="precio">Precio</label>
+            <input id="precio" x-model="precio" placeholder="0.00" type="number" step="0.01">
+            <!-- Moneda en la que esta expresado el precio-->
+            <template x-for="(currency, index) in monedas" :key="index">
                 <div>
                     <input x-model="moneda" type="radio" :value="currency" :id="index">
                     <label :for="index" x-text="currency"></label>
                 </div>
             </template>
-            <br><br>
+            <br>
             <button x-on:click="addItem">Agregar</button>
             <hr>
-            <table>
-                <tr>
-                    <th>Description</th>
-                    <th>Bs</th>
-                    <th>$</th>
-                    <th>-</th>
-                </tr>
-                <template x-for="(item, index) in items" :key="index">
-                    <tr>
-                        <td x-text="item.desc"></td>
-                        <td x-text="item.ves_price"></td>
-                        <td x-text="item.usd_price"></td>
-                        <td><button @click="deleteItem(index)">X</button></td>
-                    </tr>
-                </template>
-                <!-- Calcular total en ambas monedas -->
-            </table>
+            <figure>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Artículos</th>
+                            <th>Bs</th>
+                            <th>$</th>
+                            <th>-</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="(item, index) in items" :key="index">
+                            <tr>
+                                <td x-text="item.desc"></td>
+                                <td x-text="item.ves_precio"></td>
+                                <td x-text="item.usd_precio"></td>
+                                <td><button @click="deleteItem(index)">X</button></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                    <!-- TODO: 
+                        - Calcular total en ambas monedas.
+                        - Agregar cantidad para calcular subtotales.
+                     -->
+                </table>
+            </figure>
         </div>
     </main>
     <script>
         function load() {
             return {
-                rate: "",
                 items: [],
+                tasa: "",
                 desc: "",
-                price: "",
-                moneda: "Bolivar",
-                currencies: ["Bolivar", "Dolar"],
+                precio: "",
+                moneda: "Bolívares",
+                monedas: ["Bolívares", "Dólares"],
                 addItem() {
-                    if (this.moneda == "Dolar") {
-                        tmp_usd = price.value
-                        tmp_ves = tmp_usd * rate.value
+                    if (desc.value == "" || precio.value == "" || tasa.value == "") {
+                        return
+                    }
+                    if (this.moneda == "Dólares") {
+                        tmp_usd = precio.value
+                        tmp_ves = tmp_usd * tasa.value
                     } else {
-                        tmp_ves = price.value
-                        tmp_usd = tmp_ves / rate.value
+                        tmp_ves = precio.value
+                        tmp_usd = tmp_ves / tasa.value
                     }
                     this.items.push({
                         desc: desc.value,
-                        ves_price: parseFloat(tmp_ves).toFixed(2),
-                        usd_price: parseFloat(tmp_usd).toFixed(2)
+                        ves_precio: parseFloat(tmp_ves).toFixed(2),
+                        usd_precio: parseFloat(tmp_usd).toFixed(2),
+                        moneda: this.moneda,
                     })
                     this.desc = ""
-                    this.price = ""
+                    this.precio = ""
+                    this.moneda = "Bolívares"
                 },
                 deleteItem(index) {
                     this.items = this.items.filter((items, itemIndex) => {
                         return index !== itemIndex
                     })
+                },
+                getRate() {
+                    fetch("https://dolarpan.pythonanywhere.com/api/v1/monitor")
+                        .then(res => res.json())
+                        .then(data => this.tasa = data);
                 }
             }
         }
     </script>
 </body>
+
 </html>
