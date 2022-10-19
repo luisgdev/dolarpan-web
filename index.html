@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Dolarpan Calc" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dolarpan.netlify.app/" />
+    <meta property="og:description"
+        content="Herramienta para calcular precios en Bolívares y Dólares. Ingresa la tasa, y el precio del producto en cualquier moneda y el equivalente se calcula automáticamente." />
+    <meta property="og:image" content="https://www.svgrepo.com/download/200041/exchange.svg" />
+    <meta property="og:image:type" content="image/svg" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="300" />
     <title>Dolarpan Calc - Beta</title>
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <script defer src="https://unpkg.com/alpinejs@3.10.4/dist/cdn.min.js"></script>
@@ -17,7 +26,8 @@
         <div x-data="load()">
             <!-- Tasa de cambio -->
             <label for="tasa">Tasa Bs.</label>
-            <input id="tasa" x-model="tasa" placeholder="0.00" x-text="getRate()" type="number" step="0.01" required>
+            <input id="tasa" x-model="tasa" placeholder="0.00" x-text="getRate" x-on:change="updateItems" type="number"
+                step="0.01" required>
             <hr>
             <!-- Descripcion del producto -->
             <label for="desc">Artículo</label>
@@ -51,7 +61,7 @@
                                 <td x-text="item.desc"></td>
                                 <td x-text="item.ves_precio"></td>
                                 <td x-text="item.usd_precio"></td>
-                                <td><button @click="deleteItem(index)">X</button></td>
+                                <td><button x-on:click="deleteItem(index)">X</button></td>
                             </tr>
                         </template>
                     </tbody>
@@ -102,6 +112,15 @@
                     fetch("https://dolarpan.pythonanywhere.com/api/v1/monitor")
                         .then(res => res.json())
                         .then(data => this.tasa = data);
+                },
+                updateItems() {
+                    this.items.map((item) => {
+                        if (item.moneda == "Bolívares") {
+                            item.usd_precio = parseFloat(item.ves_precio / this.tasa).toFixed(2)
+                        } else {
+                            item.ves_precio = parseFloat(item.usd_precio * this.tasa).toFixed(2)
+                        }
+                    })
                 }
             }
         }

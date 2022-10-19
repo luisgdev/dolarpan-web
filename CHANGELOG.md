@@ -4,6 +4,12 @@ Todos los cambios notables para este proyecto serán documentados en este archiv
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.3] - 2022-10-18
+
+### Agregado
+- Al actualizar la tasa, los precios de la tabla también se actualizan.
+- Meta tags agregados.
+
 
 ## [0.0.2] - 2022-10-15
 
@@ -15,6 +21,7 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ### Cambiado
 - La tasa del dia se agrega automaticamente, desde Dolarpan bot. De igual forma, se puede agregar manualmente
+
 
 ## [0.0.1] - 2022-10-13
 
