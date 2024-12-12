@@ -8,14 +8,13 @@
     <meta property="og:title" content="Dolarpan Calc" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dolarpan.netlify.app/" />
-    <meta property="og:description"
-        content="Herramienta para calcular precios en Bolívares y Dólares. Ingresa la tasa, y el precio del producto en cualquier moneda y el equivalente se calcula automáticamente." />
+    <meta property="og:description" content="Calcula precios en VES y USD." />
     <meta property="og:image" content="https://www.svgrepo.com/download/200041/exchange.svg" />
     <meta property="og:image:type" content="image/svg" />
     <meta property="og:image:width" content="400" />
     <meta property="og:image:height" content="300" />
-    <title>Dolarpan Calc - Beta</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
+    <title>Dolarpan Calc - Beta</title><!-- Minified version -->
+    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css">
     <script defer src="https://unpkg.com/alpinejs@3.10.4/dist/cdn.min.js"></script>
 </head>
 
@@ -61,7 +60,7 @@
                                 <td x-text="item.desc"></td>
                                 <td x-text="item.ves_precio"></td>
                                 <td x-text="item.usd_precio"></td>
-                                <td><button x-on:click="deleteItem(index)">X</button></td>
+                                <td><button x-on:click="deleteItem(index)"> 🗑️ </button></td>
                             </tr>
                         </template>
                     </tbody>
